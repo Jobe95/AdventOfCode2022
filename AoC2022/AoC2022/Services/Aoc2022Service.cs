@@ -1,4 +1,5 @@
 ﻿namespace AoC2022.Services;
+using System;
 
 public class Aoc2022Service : IAoc2022Service
 {
@@ -48,4 +49,101 @@ public class Aoc2022Service : IAoc2022Service
 
         return topElf?.Sum() ?? 0;
     }
+
+    public int AoC002a()
+    {
+        var myScore = 0;
+        var readText = File.ReadAllLines(@"Inputs/002.txt");
+        foreach (var result in readText)
+        {
+         String elf = result.Split(' ')[0];
+         String mine = result.Split(' ')[1];
+         int score = calculateRound(elf, mine);
+         myScore += score;
+        }
+        return myScore;
+    }
+
+        public int AoC002b()
+    {
+        var myScore = 0;
+        var readText = File.ReadAllLines(@"Inputs/002.txt");
+        foreach (var result in readText)
+        {
+         String elf = result.Split(' ')[0];
+         String mine = result.Split(' ')[1];
+         if (mine == "X")
+         {
+            // WIN
+            myScore += calculateRound(elf, calcLose(elf));
+         } else if (mine == "Y")
+         {
+            // DRAW
+            myScore += calculateRound(elf, elf);
+
+         } else {
+            // LOSE
+            myScore += calculateRound(elf, calcWin(elf));
+         }
+        }
+        return myScore;
+    }
+
+    private String calcWin(String elf)
+    {
+        if (elf == "A")
+        {
+            return "Y";
+        } else if (elf == "B")
+        {
+            return "Z";
+        }
+        return "X";
+    }
+
+    private String calcLose(String elf)
+    {
+        if (elf == "A")
+        {
+            return "Z";
+        } else if (elf == "B")
+        {
+            return "X";
+        }
+        return "Y";
+    }
+
+    
+
+    
+
+    private int calculateRound(String elf, String mine)
+    {
+        int elfScore = sumOfChar(elf);
+        int myScore = sumOfChar(mine);
+         if (elfScore == myScore)
+        {
+            return 3 + myScore;
+        } else if (elfScore == 1 && myScore == 2 || elfScore == 2 && myScore == 3 || elfScore == 3 && myScore == 1)
+        {
+            return 6 + myScore;
+        }
+        return 0 + myScore;
+    }
+
+
+
+    private int sumOfChar(String result)
+    {
+        if (result == "A" || result == "X")
+        {
+            return 1;
+        } else if (result == "B" || result == "Y")
+        {
+            return 2;
+        } else {
+            return 3;
+        }
+    }
+
 }
